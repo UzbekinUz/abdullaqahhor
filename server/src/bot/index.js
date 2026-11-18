@@ -16,11 +16,14 @@ const cut = (s, n = 60) => { s = String(s ?? '').replace(/\s+/g, ' ').trim(); re
 const hasPub = (cfg) => cfg.fields.some((f) => f.name === 'published');
 const titleOf = (cfg, d) => cut(d[cfg.title] || '(nomsiz)', 48);
 
+const miniAppUrl = () => (process.env.MINI_APP_URL || '').trim();
+
 function mainMenu() {
   const k = new InlineKeyboard();
   const keys = Object.keys(RES);
   keys.forEach((key, i) => { k.text(RES[key].label, `m:${key}`); if (i % 2) k.row(); });
   if (keys.length % 2) k.row();
+  if (miniAppUrl()) k.webApp('📱 Mini App (admin panel)', miniAppUrl()).row();
   return k.text('🏠 Bosh sahifa matni', 'site').text('📊 Statistika', 'stats').row().text('🚪 Chiqish', 'logout');
 }
 
@@ -193,6 +196,9 @@ export function createBot(token) {
   bot.command('logout', async (ctx) => { await TgAuth.deleteOne({ chatId: String(ctx.chat.id) }); state.delete(String(ctx.chat.id)); return ctx.reply('Chiqdingiz. Qayta kirish: /login'); });
   bot.command('cancel', (ctx) => { state.delete(String(ctx.chat.id)); return home(ctx, 'Bekor qilindi.'); });
   bot.command('menu', (ctx) => home(ctx));
+  bot.command('app', (ctx) => miniAppUrl()
+    ? ctx.reply('Admin panelni Telegram ichida oching:', { reply_markup: new InlineKeyboard().webApp('📱 Mini App', miniAppUrl()) })
+    : ctx.reply('Mini App manzili sozlanmagan (MINI_APP_URL).'));
   bot.command('help', (ctx) => ctx.reply('/menu — asosiy menyu\n/stats — statistika\n/cancel — joriy amalni bekor qilish\n/logout — chiqish\n/login — kirish'));
   bot.command('stats', (ctx) => stats(ctx));
 
@@ -357,11 +363,13 @@ export function startBot() {
   if (!token) return console.log("Telegram bot o'chiq (TELEGRAM_BOT_TOKEN yo'q)");
   const bot = createBot(token);
   bot.api.setMyCommands([
+    { command: 'app', description: 'Admin Mini App' },
     { command: 'menu', description: 'Asosiy menyu' },
     { command: 'stats', description: 'Statistika' },
     { command: 'login', description: 'Kirish' },
     { command: 'logout', description: 'Chiqish' },
     { command: 'cancel', description: 'Bekor qilish' },
   ]).catch(() => {});
+  if (miniAppUrl()) bot.api.setChatMenuButton({ menu_button: { type: 'web_app', text: 'Admin', web_app: { url: miniAppUrl() } } }).catch(() => {});
   bot.start({ onStart: (i) => console.log(`Telegram bot ishga tushdi: @${i.username}`) });
 }

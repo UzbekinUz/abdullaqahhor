@@ -31,8 +31,8 @@ export default function SiteEditor() {
   }
   const up = (k) => (v) => setS({ ...s, [k]: v })
   return (
-    <form onSubmit={save} className="grid gap-6 max-w-3xl">
-      <h1 className="display text-4xl m-0">Bosh sahifa va tarjimai hol</h1>
+    <form onSubmit={save} className="grid gap-6 max-w-3xl pb-24">
+      <h1 className="display text-3xl md:text-4xl m-0">Bosh sahifa va tarjimai hol</h1>
       <Field f={{ name: 'heroTitle', label: 'Bosh sarlavha', type: 'text' }} value={s.heroTitle} onChange={up('heroTitle')} />
       <Field f={{ name: 'heroSubtitle', label: 'Bosh sahifadagi qisqa gap', type: 'textarea' }} value={s.heroSubtitle} onChange={up('heroSubtitle')} />
       <Field f={{ name: 'bornDied', label: 'Yillari (1907 — 1968)', type: 'text' }} value={s.bornDied} onChange={up('bornDied')} />
@@ -43,7 +43,7 @@ export default function SiteEditor() {
         fields={[{ name: 'year', label: 'Yil', type: 'text' }, { name: 'text', label: 'Voqea', type: 'text' }]} />
       <Field f={{ name: 'credits', label: "Rasm mualliflari (pastki qismda ko'rinadi)", type: 'textarea' }} value={s.credits} onChange={up('credits')} />
       {msg && <p role="status" className="m-0 text-muted">{msg}</p>}
-      <button className="btn justify-self-start">Saqlash</button>
+      <div className="actionbar"><button className="btn flex-1">Saqlash</button></div>
     </form>
   )
 }

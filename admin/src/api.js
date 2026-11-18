@@ -6,6 +6,14 @@ export const token = () => { try { return localStorage.getItem('adminToken') } c
 export const setToken = (t) => { try { t ? localStorage.setItem('adminToken', t) : localStorage.removeItem('adminToken') } catch {} }
 export const media = (u) => (!u ? '' : /^https?:/.test(u) ? u : u.startsWith('/media') ? SITE_URL + u : BASE + u)
 
+export async function telegramLogin(initData) {
+  const res = await fetch(`${BASE}/api/auth/telegram`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ initData }) })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.error || "Kirib bo'lmadi")
+  setToken(data.token)
+  return data
+}
+
 export async function api(path, { method = 'GET', body } = {}) {
   const res = await fetch(`${BASE}/api${path}`, {
     method,

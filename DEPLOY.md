@@ -42,3 +42,12 @@ https://uptimerobot.com da `https://qahhor-api.onrender.com/healthz` uchun 5 daq
 
 ## Cheklov
 Renderning bepul diski vaqtinchalik: admin/bot orqali yuklangan fayllar (`/uploads`) qayta ishga tushganda o'chadi. Doimiy saqlash uchun Cloudinary yoki R2 ga o'tish kerak.
+
+## Doimiy ishlash (keepalive)
+`.github/workflows/keepalive.yml` har 5 daqiqada `/healthz` ga murojaat qiladi (GitHub → Actions bo'limida yoqilganini tekshiring). Qo'shimcha ishonch uchun UptimeRobot ham qo'shing.
+
+## Telegram Mini App
+1. @BotFather → `/newbot` (yoki mavjud bot) → token oling.
+2. Render → Environment: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ADMIN_IDS` (sizning Telegram ID, @userinfobot dan biling) va `MINI_APP_URL` (admin manzili) ni kiriting.
+3. Botga `/start` yoki `/app` yuboring, yoki chatdagi «Admin» menyu tugmasini bosing. Mini App ochiladi va Telegram orqali avtomatik kiradi (parol so'ralmaydi).
+Faqat `TELEGRAM_ADMIN_IDS` dagi foydalanuvchilar kira oladi. Ro'yxat bo'sh bo'lsa, botda `/login` bilan kirganlar kiradi.

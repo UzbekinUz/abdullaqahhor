@@ -26,3 +26,5 @@ services:
         sync: false
       - key: TELEGRAM_ADMIN_IDS
         sync: false
+      - key: MINI_APP_URL
+        value: https://qahhor-admin.wwwganijonov.workers.dev

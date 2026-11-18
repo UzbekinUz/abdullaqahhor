@@ -3,8 +3,9 @@ import bcrypt from 'bcryptjs';
 import multer from 'multer';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { Admin, Story, Work, Quote, GalleryItem, Source, Video, Site } from '../models/index.js';
+import { Admin, Story, Work, Quote, GalleryItem, Source, Video, Site, TgAuth } from '../models/index.js';
 import { sign, requireAdmin } from '../auth.js';
+import { verifyInitData } from '../tgauth.js';
 import { crud } from './crud.js';
 import { UPLOAD_DIR } from '../paths.js';
 
@@ -16,6 +17,23 @@ api.post('/auth/login', async (req, res) => {
   if (!admin || !(await bcrypt.compare(password || '', admin.passwordHash)))
     return res.status(401).json({ error: "Login yoki parol noto'g'ri" });
   res.json({ token: sign(admin), username: admin.username });
+});
+
+// Telegram Mini App: initData imzosi tekshiriladi. Ruxsat: TELEGRAM_ADMIN_IDS ro'yxatida bo'lsa,
+// yoki ro'yxat bo'sh bo'lsa botda /login bilan kirgan (TgAuth) bo'lsa.
+api.post('/auth/telegram', async (req, res) => {
+  const user = verifyInitData(req.body?.initData, process.env.TELEGRAM_BOT_TOKEN);
+  if (!user) return res.status(401).json({ error: "Telegram ma'lumoti yaroqsiz. Mini App'ni bot orqali oching." });
+  const ids = (process.env.TELEGRAM_ADMIN_IDS || '').split(',').map((s) => s.trim()).filter(Boolean);
+  let ok = ids.includes(String(user.id));
+  if (!ok && !ids.length) {
+    const a = await TgAuth.findOne({ chatId: String(user.id) });
+    ok = !!a && (!a.expiresAt || a.expiresAt > new Date());
+  }
+  if (!ok) return res.status(403).json({ error: `Ruxsat yo'q. Sizning Telegram ID: ${user.id}` });
+  const admin = await Admin.findOne();
+  if (!admin) return res.status(500).json({ error: 'Admin topilmadi' });
+  res.json({ token: sign(admin), username: user.first_name || admin.username });
 });
 
 const storage = multer.diskStorage({
