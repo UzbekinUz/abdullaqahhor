@@ -1,0 +1,13 @@
+{
+  "name": "abdulla-qahhor",
+  "private": true,
+  "scripts": {
+    "server": "npm --prefix server run dev",
+    "site": "npm --prefix client run dev",
+    "admin": "npm --prefix admin run dev",
+    "build": "npm --prefix client run build && npm --prefix admin run build",
+    "preview:site": "npm --prefix client run preview",
+    "preview:admin": "npm --prefix admin run preview",
+    "test:bot": "npm --prefix server run test:bot"
+  }
+}

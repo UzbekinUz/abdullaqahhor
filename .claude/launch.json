@@ -1,0 +1,8 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "client", "runtimeExecutable": "npm", "runtimeArgs": ["--prefix", "client", "run", "dev", "--", "--port", "5173"], "port": 5173 },
+    { "name": "admin", "runtimeExecutable": "npm", "runtimeArgs": ["--prefix", "admin", "run", "dev", "--", "--port", "5174"], "port": 5174 },
+    { "name": "site-pwa", "runtimeExecutable": "npm", "runtimeArgs": ["--prefix", "client", "run", "preview", "--", "--port", "4173"], "port": 4173 }
+  ]
+}
