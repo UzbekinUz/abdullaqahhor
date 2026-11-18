@@ -19,6 +19,9 @@ export default function Shell() {
     `flex items-center gap-3 px-4 py-3 rounded-xl no-underline font-semibold ${isActive ? 'bg-accent text-accent-ink' : 'text-ink hover:bg-surface'}`
   const tab = ({ isActive }) => `tab ${isActive ? 'tab-on' : ''}`
   const sheetItem = ({ isActive }) => `sheet-item ${isActive ? 'sheet-on' : ''}`
+  const keys = ['', ...TABS]
+  const seg = pathname.split('/')[1] || ''
+  const idx = more ? 4 : keys.includes(seg) ? keys.indexOf(seg) : 4
   const rest = Object.keys(resources).filter((k) => !TABS.includes(k))
   const logout = () => { setToken(null); nav('/login') }
 
@@ -41,10 +44,11 @@ export default function Shell() {
         </div>
       </aside>
 
-      <main className="main-pad min-w-0"><Outlet /></main>
+      <main className="main-pad min-w-0"><div key={pathname} className="page"><Outlet /></div></main>
 
       {/* Telefon: pastki panel */}
       <nav className="tabbar lg:hidden" aria-label="Asosiy bo'limlar" onClick={() => haptic('light')}>
+        <span className="tab-pill" style={{ transform: `translateX(${idx * 100}%)` }} aria-hidden="true" />
         <NavLink end to="/" className={tab}><LayoutDashboard size={22} /><span>Boshqaruv</span></NavLink>
         {TABS.map((k) => {
           const Icon = ICONS[k]

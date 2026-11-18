@@ -132,7 +132,16 @@ label { font-size: .9rem; color: var(--muted); display: block; margin-bottom: .2
   color: var(--muted); font: inherit; font-size: .6875rem; font-weight: 600; text-decoration: none; cursor: pointer;
 }
 .tab span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tab-on { color: var(--accent-strong); background: var(--mint-soft); }
+.tabbar { overflow: hidden; }
+.tab { position: relative; z-index: 1; transition: color .25s; }
+.tab-on { color: var(--accent-strong); }
+.tab-pill {
+  position: absolute; z-index: 0; top: .35rem; bottom: calc(.35rem + env(safe-area-inset-bottom)); left: .25rem;
+  width: calc((100% - .5rem) / 5); border-radius: 12px; background: var(--mint-soft);
+  transition: transform .38s cubic-bezier(.34, 1.4, .5, 1);
+}
+.tab-on svg { animation: pop .35s cubic-bezier(.34, 1.6, .5, 1); }
+@keyframes pop { 0% { transform: scale(.8); } 100% { transform: scale(1); } }
 .tab:active { transform: scale(.96); }
 
 .sheet-wrap { position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-end; }
@@ -196,3 +205,16 @@ label { font-size: .9rem; color: var(--muted); display: block; margin-bottom: .2
 @media (pointer: coarse) { .btn { min-height: 2.9rem; } }
 label.btn { display: inline-flex; margin: 0; font-size: 1rem; color: var(--ink); }
 label.btn.btn-quiet { color: var(--ink); }
+
+/* ---------- Silliq o'tishlar ---------- */
+.page { animation: page-in .34s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes page-in { from { opacity: 0; transform: translateY(14px) scale(.985); } }
+.row-in { animation: row-in .4s cubic-bezier(.22, 1, .36, 1) both; animation-delay: calc(var(--i, 0) * 35ms); }
+@keyframes row-in { from { opacity: 0; transform: translateY(10px); } }
+.actionbar { animation: bar-in .35s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes bar-in { from { transform: translateY(100%); } }
+.btn, .row-main, .tab, .sheet-item, .icon-btn { transition: transform .15s, background .2s, color .2s, opacity .2s; }
+@media (prefers-reduced-motion: reduce) {
+  .page, .row-in, .actionbar, .sheet, .sheet-back, .tab-on svg { animation: none !important; }
+  .tab-pill { transition: none; }
+}

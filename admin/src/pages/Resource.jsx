@@ -38,7 +38,7 @@ export default function Resource({ name, cfg }) {
 
   if (edit)
     return (
-      <form onSubmit={save} className="grid gap-5 max-w-3xl pb-24">
+      <form onSubmit={save} className="grid gap-5 max-w-3xl pb-24 page">
         <h1 className="display text-3xl m-0">{edit._id ? 'Tahrirlash' : "Yangi qo'shish"}</h1>
         {cfg.fields.map((f) => <Field key={f.name} f={f} value={edit[f.name]} onChange={(v) => setEdit({ ...edit, [f.name]: v })} />)}
         {msg && <p role="alert" className="m-0 text-red-500">{msg}</p>}
@@ -66,11 +66,11 @@ export default function Resource({ name, cfg }) {
 
       <ul className="list-none p-0 mt-5 grid gap-2.5">
         {list === null && [0, 1, 2].map((i) => <li key={i} className="row skeleton" aria-hidden="true" />)}
-        {shown.map((d) => {
+        {shown.map((d, i) => {
           const img = d.cover || d.thumbnail || (d.url && /\.(jpe?g|png|webp)$/i.test(d.url) ? d.url : '')
           const sub = [d.kind, d.year, d.source, d.author].filter(Boolean).join(' · ')
           return (
-            <li key={d._id} className="row">
+            <li key={d._id} className="row row-in" style={{ '--i': Math.min(i, 12) }}>
               <button className="row-main" onClick={() => { haptic('light'); setMsg(''); setEdit(d) }}>
                 {img && <img src={media(img)} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = 'none' }} className="w-14 h-14 rounded-xl object-cover shrink-0" />}
                 <span className="min-w-0 flex-1 text-left">
